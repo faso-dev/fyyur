@@ -4,51 +4,51 @@
   <div class="form-wrapper">
     <form class="form" method="post" action="/artists/{{artist.id}}/edit">
       <h3 class="form-heading">Edit artist <em>{{ artist.name }}</em></h3>
-      <div class="form-group">
+      <div class="form-group {% if form.name.errors %} has-error {% endif %}">
         <label for="name">Name</label>
         {{ form.name(class_ = 'form-control', autofocus = true) }}
       </div>
       <div class="form-group">
           <label>City & State</label>
           <div class="form-inline">
-            <div class="form-group">
+            <div class="form-group {% if form.city.errors %} has-error {% endif %}">
               {{ form.city(class_ = 'form-control', placeholder='City', autofocus = true) }}
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.state.errors %} has-error {% endif %}">
               {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true) }}
             </div>
           </div>
       </div>
-      <div class="form-group">
+      <div class="form-group {% if form.phone.errors %} has-error {% endif %}">
           <label for="phone">Phone</label>
           {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
         </div>
-      <div class="form-group">
+      <div class="form-group {% if form.genres.errors %} has-error {% endif %}">
         <label for="genres">Genres</label>
         <small>Ctrl+Click to select multiple</small>
         {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true) }}
       </div>
-      <div class="form-group">
+      <div class="form-group {% if form.facebook_link.errors %} has-error {% endif %}">
           <label for="facebook_link">Facebook Link</label>
           {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
         </div>
       
-      <div class="form-group">
+      <div class="form-group {% if form.image_link.errors %} has-error {% endif %}">
           <label for="image_link">Image Link</label>
           {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
       </div>
 
-      <div class="form-group">
+      <div class="form-group {% if form.website_link.errors %} has-error {% endif %}">
             <label for="website_link">Website Link</label>
             {{ form.website_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
       </div>
 
-      <div class="form-group">
+      <div class="form-group {% if form.seeking_venue.errors %} has-error {% endif %}">
           <label for="seeking_venue">Looking for Venues</label>
           {{ form.seeking_venue(placeholder='Venue', autofocus = true) }}
       </div>
 
-      <div class="form-group">
+      <div class="form-group {% if form.seeking_description.errors %} has-error {% endif %}">
           <label for="seeking_description">Seeking Description</label>
           {{ form.seeking_description(class_ = 'form-control', autofocus = true) }}
       </div>
