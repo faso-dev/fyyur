@@ -1,0 +1,17 @@
+### SOME OPERATIONS I DID ON THE ORIGINAL FILES ###
+
+1 - I renamed the table names in the models to lowercase because I couldn't do "\d Artist or Venue or Show" in the postgres shell
+
+I kept getting the following output: Did not find any relation named "Venue" etc.
+
+2 - I added some HTML in the home.html file to implement the recent artist and recent venue list functionality.
+I also edited the main.html file to add some JavaScript for the functionality of deleting an artist, venue
+
+3 - I edited the form HTML files to add validation errors when submitting forms with invalid data.
+
+4 - I extracted the date formatting function in the utils folder and the models in the models folder.
+
+
+### RESSOURCES ###
+https://flask.palletsprojects.com/en/1.1.x/patterns/wtforms/ (for form validation errors in controllers and views)
+https://flask-sqlalchemy.palletsprojects.com/en/2.x/api/ (for SQLAlchemy ORM query model by id or abort if not found)
