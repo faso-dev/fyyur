@@ -1,25 +1,76 @@
 {% extends 'layouts/main.html' %}
 {% block title %}Fyyur{% endblock %}
 {% block content %}
-<div class="row">
-	<div class="col-sm-6">
-		<h1>Fyyur 🔥</h1>
-		<p class="lead">Where musical artists meet musical venues.</p>
-		<h3>
-			<a href="/venues"><button class="btn btn-primary btn-lg">Find a venue</button></a>
-			<a href="/venues/create"><button class="btn btn-default btn-lg">Post a venue</button></a>
-		</h3>
-		<h3>
-			<a href="/artists"><button class="btn btn-primary btn-lg">Find an artist</button></a>
-			<a href="/artists/create"><button class="btn btn-default btn-lg">Post an artist</button></a>
-		</h3>
-		<p class="lead">Publicize about your show for free.</p>
-		<h3>
-			<a href="/shows/create"><button class="btn btn-default btn-lg">Post a show</button></a>
-		</h3>
-	</div>
-	<div class="col-sm-6 hidden-sm hidden-xs">
-		<img id="front-splash" src="{{ url_for('static',filename='img/front-splash.jpg') }}" alt="Front Photo of Musical Band" />
-	</div>
-</div>
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>Fyyur 🔥</h1>
+            <p class="lead">Where musical artists meet musical venues.</p>
+            <h3>
+                <a href="/venues">
+                    <button class="btn btn-primary btn-lg">Find a venue</button>
+                </a>
+                <a href="/venues/create">
+                    <button class="btn btn-default btn-lg">Post a venue</button>
+                </a>
+            </h3>
+            <h3>
+                <a href="/artists">
+                    <button class="btn btn-primary btn-lg">Find an artist</button>
+                </a>
+                <a href="/artists/create">
+                    <button class="btn btn-default btn-lg">Post an artist</button>
+                </a>
+            </h3>
+            <p class="lead">Publicize about your show for free.</p>
+            <h3>
+                <a href="/shows/create">
+                    <button class="btn btn-default btn-lg">Post a show</button>
+                </a>
+            </h3>
+        </div>
+        <div class="col-sm-6 hidden-sm hidden-xs">
+            <img id="front-splash" src="{{ url_for('static',filename='img/front-splash.jpg') }}"
+                 alt="Front Photo of Musical Band"/>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 3rem;">
+        {# display recent artists #}
+        <div class="col-sm-6 mt-2">
+            <h2 style="margin-bottom: 3.5rem;">Recent Artists</h2>
+            {% for artist in latest_artists %}
+                <div class="col-sm-12" style="margin-bottom: 3.5rem; padding-bottom: 1.5rem; border-bottom: lightgray solid 1px">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="img-responsive" src="{{ artist.image_link }}" alt="{{ artist.name }}">
+                        </div>
+                        <div class="col-sm-8">
+                            <h3 style="margin-top: 0;">{{ artist.name }}</h3>
+                            <p>
+                                <a href="/artists/{{ artist.id }}" class="btn btn-primary" role="button">View</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-sm-6 mt-2">
+            {# display recent venues #}
+            <h2 style="margin-bottom: 3.5rem;">Recent Venues</h2>
+            {% for venue in latest_venues %}
+                <div class="col-sm-12" style="margin-bottom: 3.5rem; padding-bottom: 1.5rem; border-bottom: lightgray solid 1px">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="img-responsive" src="{{ venue.image_link }}" alt="{{ venue.name }}">
+                        </div>
+                        <div class="col-sm-8">
+                            <h3 style="margin-top: 0;">{{ venue.name }}</h3>
+                            <p>
+                                <a href="/venues/{{ venue.id }}" class="btn btn-primary" role="button">View</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
