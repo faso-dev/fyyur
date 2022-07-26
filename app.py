@@ -24,6 +24,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 app.jinja_env.filters['datetime'] = format_datetime
+app.jinja_env.filters['timedelta'] = timedelta
 
 
 # ----------------------------------------------------------------------------#
@@ -59,15 +60,11 @@ def venues():
         # extract state
         state = venue.state
 
-        # count upcoming shows for each venue
-        num_upcoming_shows = Show.query.filter_by(venue_id=venue.id).filter(
-            Show.start_time > datetime.now()).count()
-
         # build venue venues data
         venue_data = {
             'id': venue.id,
             'name': venue.name,
-            'num_upcoming_shows': num_upcoming_shows
+            'num_upcoming_shows': venue.num_upcoming_shows,
         }
 
         # check if city and state already in data, if not add it
@@ -92,6 +89,7 @@ def search_venues():
     # get search term from form data
     search_term = request.form.get('search_term', '')
     city, state = get_search_parts(request)
+
     if city and state:
         # get venues from db that match search term
         venues_results = Venue.query.filter(Venue.city.ilike(f'%{city}%')).filter(
@@ -106,14 +104,11 @@ def search_venues():
 
     # for each venue in venues
     for venue in venues_results:
-        # count number of upcoming shows for each venue
-        num_upcoming_shows = Show.query.filter_by(venue_id=venue.id).filter(Show.start_time > datetime.now()).count()
-
         # build venue data
         data.append({
             'id': venue.id,
             'name': venue.name,
-            'num_upcoming_shows': num_upcoming_shows
+            'num_upcoming_shows': venue.num_upcoming_shows,
         })
 
     # build final response data
@@ -121,6 +116,7 @@ def search_venues():
         "count": len(data),
         "data": data
     }
+
     return render_template('pages/search_venues.html',
                            results=response,
                            search_term=search_term)
@@ -304,7 +300,8 @@ def show_artist(artist_id):
             'upcoming_shows': upcoming_shows,
             'upcoming_shows_count': len(upcoming_shows),
             'past_shows': past_shows,
-            'past_shows_count': len(past_shows)
+            'past_shows_count': len(past_shows),
+            'released_albums_count': len(artist.albums)
         }
     }
 
@@ -475,6 +472,145 @@ def create_show_submission():
         db.session.close()
 
     return redirect(url_for('index'))
+
+
+# ----------------------------------------------------------------------------#
+# Albums CRUD : Stand Out Functionality
+# ----------------------------------------------------------------------------#
+
+@app.route('/artists/<int:artist_id>/albums/create', methods=['GET'])
+def create_album_form(artist_id):
+    # retrieve artist with artist_id or 404
+    artist = Artist.query.get_or_404(artist_id)
+    form = AlbumForm()
+    form.artist_id.data = artist.id
+    return render_template('forms/new_album.html', form=form, artist=artist)
+
+
+@app.route('/artists/<int:artist_id>/albums/create', methods=['POST'])
+def create_album_submission(artist_id):
+    # retrieve artist with artist_id or 404
+    artist = Artist.query.get_or_404(artist_id)
+    # retrieve album form data
+    form = AlbumForm(request.form)
+    form.artist_id.data = artist.id
+
+    # check if form is valid
+    if form.validate():
+        try:
+            album = Album(**form.data)
+            db.session.add(album)
+            db.session.commit()
+            # on successful db insert, flash success
+            flash('Empty Album ' + request.form['name'] + ' was successfully released by ' + artist.name + '! Please add some songs.')
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            flash('An error occurred. Album ' + request.form['name'] + ' could not be released.')
+        finally:
+            db.session.close()
+
+    else:
+        print(form.errors)
+        return render_template('forms/new_album.html', form=form, artist=artist)
+
+    return redirect(url_for('show_artist', artist_id=artist.id))
+
+
+@app.route('/albums/<int:album_id>/edit', methods=['GET'])
+def edit_album_form(album_id):
+    album = Album.query.get_or_404(album_id)
+    form = AlbumForm(obj=album)
+    form.artist_id.data = album.artist_id
+    return render_template('forms/edit_album.html', form=form, album=album)
+
+
+@app.route('/albums/<int:album_id>/edit', methods=['POST'])
+def edit_album_submission(album_id):
+    album = Album.query.get_or_404(album_id)
+    form = AlbumForm(request.form)
+    form.artist_id.data = album.artist_id
+
+    if form.validate():
+        try:
+            form.populate_obj(album)
+            db.session.commit()
+            flash('Album ' + request.form['name'] + ' was successfully updated!')
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            flash('An error occurred. Album ' + request.form['name'] + ' could not be updated.')
+        finally:
+            db.session.close()
+    else:
+        return render_template('forms/edit_album.html', form=form, album=album)
+
+    return redirect(url_for('show_album', album_id=album_id))
+
+
+@app.route('/albums/<int:album_id>/delete', methods=['DELETE'])
+def delete_album(album_id):
+    album = Album.query.get_or_404(album_id)
+    try:
+        db.session.delete(album)
+        db.session.commit()
+        flash('Album ' + album.name + ' was successfully deleted!')
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+        flash('An error occurred. Album ' + album.name + ' could not be deleted.')
+    finally:
+        db.session.close()
+
+    return jsonify({'success': True})
+
+
+@app.route('/albums/<int:album_id>', methods=['GET'])
+def show_album(album_id):
+    album = Album.query.get_or_404(album_id)
+    return render_template('pages/show_album.html', album=album)
+
+
+# ----------------------------------------------------------------------------#
+# Songs CREATE : Stand Out
+# ----------------------------------------------------------------------------#
+
+@app.route('/albums/<int:album_id>/songs/create', methods=['GET'])
+def create_song_form(album_id):
+    album = Album.query.get_or_404(album_id)
+    form = SongForm()
+    form.album_id.data = album.id
+    return render_template('forms/new_song.html', form=form, album=album)
+
+
+@app.route('/albums/<int:album_id>/songs/create', methods=['POST'])
+def create_song_submission(album_id):
+    # retrieve album
+    album = Album.query.get_or_404(album_id)
+    # retrieve song form data
+    form = SongForm(request.form)
+    form.album_id.data = album.id
+
+    # check if form is valid
+    if form.validate():
+        try:
+            song = Song(**form.data)
+            db.session.add(song)
+            db.session.commit()
+            # on successful db insert, flash success
+            flash('Song ' + request.form['name'] + ' was successfully added to album ' + album.name + ' !')
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            flash(
+                'An error occurred. Song ' + request.form['name'] + ' could not be added to album ' + album.name + '.')
+        finally:
+            db.session.close()
+
+    else:
+        return render_template('forms/new_song.html', form=form, album=album)
+
+    return redirect(url_for('show_album', album_id=album.id))
 
 
 @app.errorhandler(404)
