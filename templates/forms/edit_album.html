@@ -1,0 +1,22 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Edit Album{% endblock %}
+{% block content %}
+    <div class="form-wrapper">
+        <form action="{{ url_for('edit_album_submission', album_id=album.id) }}" method="post" autocomplete="off">
+            <h3 class="form-heading">Edit album <em>{{ album.name }}</em></h3>
+            <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                <label for="name">Name</label>
+                {{ form.name(class_ = 'form-control', autofocus = true) }}
+            </div>
+            <div class="form-group {% if form.release_date.errors %} has-error {% endif %}">
+                <label for="release_date">Release Date</label>
+                {{ form.release_date(class_ = 'form-control') }}
+            </div>
+            <div class="form-group {% if form.image_link.errors %} has-error {% endif %}">
+                <label for="image_link">Cover image Link</label>
+                {{ form.image_link(class_ = 'form-control') }}
+            </div>
+            <input type="submit" value="Edit Album" class="btn btn-primary btn-lg btn-block">
+        </form>
+    </div>
+{% endblock %}

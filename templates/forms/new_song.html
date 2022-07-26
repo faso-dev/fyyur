@@ -1,0 +1,18 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Add a new song to album : {{ album.name }}{% endblock %}
+{% block content %}
+    <div class="form-wrapper">
+        <form action="{{ url_for('create_song_submission', album_id=album.id) }}" method="post" autocomplete="off">
+            <h3 class="form-heading">Add a new song to album : <em>{{ album.name }}</em></h3>
+            <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                <label for="name">Name</label>
+                {{ form.name(class_ = 'form-control', autofocus = true) }}
+            </div>
+            <div class="form-group {% if form.duration.errors %} has-error {% endif %}">
+                <label for="release_date">Duration in seconds(60s => 1 min)</label>
+                {{ form.duration(class_ = 'form-control') }}
+            </div>
+            <input type="submit" value="Add Song" class="btn btn-primary btn-lg btn-block">
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'layouts/main.html' %}
+{% block title %}{{ album.name }} | Album{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <h1 class="monospace">
+                {{ album.name }}
+            </h1>
+            <div class="genres">
+                <span class="genre">
+                    Artist : {{ album.artist.name }}
+                </span>
+                <span class="genre">
+                    Tracks : {{ album.total_tracks }}
+                </span>
+                <span class="genre">
+                    Release date : {{ album.release_date|datetime('full') }}
+                </span>
+            </div>
+            <p class="subtitle">
+                ID: {{ album.id }}
+            </p>
+            <div class="songs genres" style="margin-top: 2rem; margin-bottom: 3rem;">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3>
+                            Tracks
+                        </h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <h3>
+                            <a href="/albums/{{ album.id }}/songs/create">
+                                <button class="btn btn-primary btn-lg">Add a new song</button>
+                            </a>
+                        </h3>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Duration</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for song in album.songs %}
+                        <tr>
+                            <td>{{ song.track_number }}</td>
+                            <td>{{ song.name }}</td>
+                            <td>{{ song.duration|timedelta }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="col-sm-6">
+            <img src="{{ album.image_link }}" alt="Venue Image"/>
+        </div>
+    </div>
+
+    <a href="/albums/{{ album.id }}/edit">
+        <button class="btn btn-primary btn-lg">Edit</button>
+    </a>
+    <button
+            id="delete-item"
+            data-redirect="/artists/{{ album.artist.id }}"
+            data-href="{{ url_for('delete_album', album_id=album.id) }}"
+            class="btn btn-danger btn-lg">
+        Delete
+    </button>
+{% endblock %}
+
+
+
