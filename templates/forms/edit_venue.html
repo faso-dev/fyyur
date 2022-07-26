@@ -1,63 +1,98 @@
 {% extends 'layouts/main.html' %}
 {% block title %}Edit Venue{% endblock %}
 {% block content %}
-  <div class="form-wrapper">
-    <form class="form" method="post" action="/venues/{{venue.id}}/edit">
-      <h3 class="form-heading">Edit venue <em>{{ venue.name }}</em> <a href="{{ url_for('index') }}" title="Back to homepage"><i class="fa fa-home pull-right"></i></a></h3>
-      <div class="form-group {% if form.name.errors %} has-error {% endif %}">
-        <label for="name">Name</label>
-        {{ form.name(class_ = 'form-control', autofocus = true) }}
-      </div>
-      <div class="form-group">
-          <label>City & State</label>
-          <div class="form-inline">
-            <div class="form-group {% if form.city.errors %} has-error {% endif %}">
-              {{ form.city(class_ = 'form-control', placeholder='City', autofocus = true) }}
+    <div class="form-wrapper">
+        <form class="form" method="post" action="/venues/{{ venue.id }}/edit">
+            <h3 class="form-heading">Edit venue <em>{{ venue.name }}</em> <a href="{{ url_for('index') }}"
+                                                                             title="Back to homepage"><i
+                    class="fa fa-home pull-right"></i></a></h3>
+            <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                <label for="name">Name</label>
+                {{ form.name(class_ = 'form-control', autofocus = true) }}
+                {% for error in form.name.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
             </div>
-            <div class="form-group {% if form.state.errors %} has-error {% endif %}">
-              {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true) }}
+            <div class="form-group">
+                <label>City & State</label>
+                <div class="form-inline">
+                    <div class="form-group {% if form.city.errors %} has-error {% endif %}">
+                        {{ form.city(class_ = 'form-control', placeholder='City', autofocus = true) }}
+                    </div>
+                    <div class="form-group {% if form.state.errors %} has-error {% endif %}">
+                        {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true) }}
+                    </div>
+                </div>
+                {% for error in form.city.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+                {% for error in form.state.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
             </div>
-          </div>
-      </div>
-      <div class="form-group {% if form.address.errors %} has-error {% endif %}">
-        <label for="address">Address</label>
-        {{ form.address(class_ = 'form-control', autofocus = true) }}
-      </div>
-      <div class="form-group {% if form.phone.errors %} has-error {% endif %}">
-          <label for="phone">Phone</label>
-          {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
-        </div>
-      <div class="form-group {% if form.genres.errors %} has-error {% endif %}">
-        <label for="genres">Genres</label>
-        <small>Ctrl+Click to select multiple</small>
-        {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true) }}
-      </div>
-      <div class="form-group {% if form.facebook_link.errors %} has-error {% endif %}">
-          <label for="facebook_link">Facebook Link</label>
-          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
-       </div>
-      
-       <div class="form-group {% if form.image_link.errors %} has-error {% endif %}">
-          <label for="image_link">Image Link</label>
-          {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
-       </div>
+            <div class="form-group {% if form.address.errors %} has-error {% endif %}">
+                <label for="address">Address</label>
+                {{ form.address(class_ = 'form-control', autofocus = true) }}
+                {% for error in form.address.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group {% if form.phone.errors %} has-error {% endif %}">
+                <label for="phone">Phone</label>
+                {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
+                {% for error in form.phone.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group {% if form.genres.errors %} has-error {% endif %}">
+                <label for="genres">Genres</label>
+                <small>Ctrl+Click to select multiple</small>
+                {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true) }}
+                {% for error in form.genres.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group {% if form.facebook_link.errors %} has-error {% endif %}">
+                <label for="facebook_link">Facebook Link</label>
+                {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+                {% for error in form.facebook_link.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
 
-       <div class="form-group {% if form.website_link.errors %} has-error {% endif %}">
-              <label for="website_link">Website Link</label>
-              {{ form.website_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
-        </div>
+            <div class="form-group {% if form.image_link.errors %} has-error {% endif %}">
+                <label for="image_link">Image Link</label>
+                {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+                {% for error in form.image_link.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
 
-        <div class="form-group {% if form.seeking_talent.errors %} has-error {% endif %}">
-             <label for="seeking_talent">Looking for Talent</label>
-             {{ form.seeking_talent(placeholder='Venue', autofocus = true) }}
-        </div>
+            <div class="form-group {% if form.website_link.errors %} has-error {% endif %}">
+                <label for="website_link">Website Link</label>
+                {{ form.website_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+                {% for error in form.website_link.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
 
-        <div class="form-group {% if form.seeking_description.errors %} has-error {% endif %}">
-            <label for="seeking_description">Seeking Description</label>
-            {{ form.seeking_description(class_ = 'form-control', autofocus = true) }}
-          </div>
-      
-      <input type="submit" value="Edit Venue" class="btn btn-primary btn-lg btn-block">
-    </form>
-  </div>
+            <div class="form-group {% if form.seeking_talent.errors %} has-error {% endif %}">
+                <label for="seeking_talent">Looking for Talent</label>
+                {{ form.seeking_talent(placeholder='Venue', autofocus = true) }}
+                {% for error in form.seeking_talent.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="form-group {% if form.seeking_description.errors %} has-error {% endif %}">
+                <label for="seeking_description">Seeking Description</label>
+                {{ form.seeking_description(class_ = 'form-control', autofocus = true) }}
+                {% for error in form.seeking_description.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <input type="submit" value="Edit Venue" class="btn btn-primary btn-lg btn-block">
+        </form>
+    </div>
 {% endblock %}

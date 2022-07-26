@@ -7,10 +7,16 @@
             <div class="form-group {% if form.name.errors %} has-error {% endif %}">
                 <label for="name">Name</label>
                 {{ form.name(class_ = 'form-control', autofocus = true) }}
+                {% for error in form.name.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
             </div>
             <div class="form-group {% if form.duration.errors %} has-error {% endif %}">
                 <label for="release_date">Duration in seconds(60s => 1 min)</label>
                 {{ form.duration(class_ = 'form-control') }}
+                {% for error in form.duration.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
             </div>
             <input type="submit" value="Add Song" class="btn btn-primary btn-lg btn-block">
         </form>
