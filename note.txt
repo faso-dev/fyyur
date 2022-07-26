@@ -7,11 +7,33 @@ I kept getting the following output: Did not find any relation named "Venue" etc
 2 - I added some HTML in the home.html file to implement the recent artist and recent venue list functionality.
 I also edited the main.html file to add some JavaScript for the functionality of deleting an artist, venue
 
-3 - I edited the form HTML files to add validation errors when submitting forms with invalid data.
+3 - I extracted the date formatting function in the utils folder and the models in the models folder.
 
-4 - I extracted the date formatting function in the utils folder and the models in the models folder.
+
+### STAND OUT ###
+
+1 - Add Album and Song Models
+
+2 - Add Album and Song forms
+
+3 - Add Album CRUD controllers routes and views for Artist
+
+4 - Add Song CREATE controller route and view for Album
+
+5 - Add timedelta format function for track duration
+
+6 - Add search by city and state for Artists and Venues
+
+7 - Show Recent Listed Artists and Recently Listed Venues on the homepage,
+
+8 - Add deletion for Artists and Venues on edit page
+
+9 - Display form validation errors in form view
+
 
 
 ### RESSOURCES ###
 https://flask.palletsprojects.com/en/1.1.x/patterns/wtforms/ (for form validation errors in controllers and views)
 https://flask-sqlalchemy.palletsprojects.com/en/2.x/api/ (for SQLAlchemy ORM query model by id or abort if not found)
+https://docs.python.org/3/tutorial/datastructures.html
+https://docs.python.org/3/library/functions.html?highlight=property#property (for custom properties' decoration in models)
