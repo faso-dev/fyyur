@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
-from wtforms.validators import DataRequired, URL
+from wtforms.validators import DataRequired, URL, NumberRange, Regexp
 
 
 class ShowForm(Form):
@@ -237,4 +237,40 @@ class ArtistForm(Form):
 
     seeking_description = StringField(
         'seeking_description'
+    )
+
+
+# ----------------------------------------------------------------------------#
+# Stand Out
+# ----------------------------------------------------------------------------#
+
+class AlbumForm(Form):
+    name = StringField(
+        'name', validators=[DataRequired()]
+    )
+
+    artist_id = StringField(
+        'artist_id', validators=[DataRequired()]
+    )
+
+    release_date = DateTimeField(
+        'release_date', validators=[DataRequired()], default=datetime.today()
+    )
+
+    image_link = StringField(
+        'image_link', validators=[URL(), DataRequired()]
+    )
+
+
+class SongForm(Form):
+    name = StringField(
+        'name', validators=[DataRequired()]
+    )
+
+    album_id = StringField(
+        'album_id', validators=[DataRequired()],
+    )
+
+    duration = StringField(
+        'duration', validators=[DataRequired(), Regexp('^[0-9]*$')]
     )
