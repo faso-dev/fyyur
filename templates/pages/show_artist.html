@@ -78,9 +78,33 @@
             {% endfor %}
         </div>
     </section>
-
+    <section>
+        <h2 class="monospace">
+            {{ artist.released_albums_count }} Album{% if artist.released_albums_count > 1 %}s{% endif %} released
+        </h2>
+        <div class="row">
+            {% for album in artist.albums %}
+                <div class="col-sm-4">
+                    <div class="tile tile-show">
+                        <img src="{{ album.image_link }}" alt="Album Image"/>
+                        <h3>
+                            <a href="/albums/{{ album.id }}">
+                                {{ album.name }}
+                            </a>
+                        </h3>
+                        <p>release at</p>
+                        <h4>{{ album.release_date|datetime('full') }}</h4>
+                        <h5>{{ album.total_tracks }} track{% if album.total_tracks > 1 %}s{% endif %}</h5>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
     <a href="/artists/{{ artist.id }}/edit">
         <button class="btn btn-primary btn-lg">Edit</button>
+    </a>
+    <a href="/artists/{{ artist.id }}/albums/create">
+        <button class="btn btn-primary btn-lg">Release album</button>
     </a>
     <button
             id="delete-item"
