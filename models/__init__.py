@@ -24,7 +24,7 @@ class Venue(db.Model):
     website_link = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(120))
-    shows = db.relationship('Show', backref='venue', lazy='joined', cascade='all, delete-orphan')
+    shows = db.relationship('Show', backref='venues', lazy='joined', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Artist id : {self.id} {self.name} >'
@@ -60,8 +60,8 @@ class Artist(db.Model):
     website_link = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(120))
-    shows = db.relationship('Show', backref='artist', lazy=True, cascade='all, delete-orphan')
-    albums = db.relationship('Album', backref='artist', lazy='joined', cascade='all, delete-orphan')
+    shows = db.relationship('Show', backref='artists', lazy=True, cascade='all, delete-orphan')
+    albums = db.relationship('Album', backref='artists', lazy='joined', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Artist id : {self.id} {self.name} >'
@@ -95,7 +95,7 @@ class Album(db.Model):
     name = db.Column(db.String)
     release_date = db.Column(db.DateTime, nullable=False)
     image_link = db.Column(db.String(500))
-    songs = db.relationship('Song', backref='album', lazy='joined', cascade='all, delete-orphan')
+    songs = db.relationship('Song', backref='albums', lazy='joined', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Album id : {self.id} artist_id : {self.artist_id} name : {self.name}>'
