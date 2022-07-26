@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -22,10 +24,26 @@ class Venue(db.Model):
     website_link = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(120))
-    shows = db.relationship('Show', backref='venue', lazy=True, cascade='all, delete-orphan')
+    shows = db.relationship('Show', backref='venue', lazy='joined', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Artist id : {self.id} {self.name} >'
+
+    @property
+    def past_shows(self):
+        return [show for show in self.shows if show.start_time < datetime.now()]
+
+    @property
+    def upcoming_shows(self):
+        return [show for show in self.shows if show.start_time > datetime.now()]
+
+    @property
+    def num_past_shows(self):
+        return len(self.past_shows)
+
+    @property
+    def num_upcoming_shows(self):
+        return len(self.upcoming_shows)
 
 
 class Artist(db.Model):
@@ -43,9 +61,18 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(120))
     shows = db.relationship('Show', backref='artist', lazy=True, cascade='all, delete-orphan')
+    albums = db.relationship('Album', backref='artist', lazy='joined', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Artist id : {self.id} {self.name} >'
+
+    @property
+    def total_albums(self):
+        return len(self.albums)
+
+    @property
+    def latest_released_album(self):
+        return self.albums[-1]
 
 
 class Show(db.Model):
@@ -58,3 +85,38 @@ class Show(db.Model):
 
     def __repr__(self):
         return f'<Show id : {self.id} artist_id : {self.artist_id} venue_id : {self.venue_id} start_time : {self.start_time}>'
+
+
+class Album(db.Model):
+    __tablename__ = 'albums'
+
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
+    name = db.Column(db.String)
+    release_date = db.Column(db.DateTime, nullable=False)
+    image_link = db.Column(db.String(500))
+    songs = db.relationship('Song', backref='album', lazy='joined', cascade='all, delete-orphan')
+
+    def __repr__(self):
+        return f'<Album id : {self.id} artist_id : {self.artist_id} name : {self.name}>'
+
+    @property
+    def total_tracks(self):
+        return len(self.songs)
+
+
+class Song(db.Model):
+    __tablename__ = 'songs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'), nullable=False)
+    name = db.Column(db.String)
+    duration = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f'<Song id : {self.id} album_id : {self.album_id} title : {self.title}>'
+
+    @property
+    def track_number(self):
+        return self.album.songs.index(self) + 1
+
