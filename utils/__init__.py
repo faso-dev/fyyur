@@ -19,3 +19,13 @@ def format_datetime(value, format='medium'):
     elif format == 'medium':
         format = "EE MM, dd, y h:mma"
     return babel.dates.format_datetime(date, format, locale='en')
+
+
+def timedelta(duration):
+    minutes = (duration % 3600) // 60
+    seconds = duration % 60
+    if minutes == 0:
+        return str(seconds) + ' seconds'
+    elif seconds == 0:
+        return str(minutes) + ' minutes'
+    return str(minutes) + ' minutes' + ' ' + str(seconds) + ' seconds'
